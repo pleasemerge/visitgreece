@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'Raleway';
+  src: url('/fonts/raleway.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Merienda One';
+  src: url('/fonts/meriendaone.ttf') format('truetype');
+}
+
+html, body {
+  font-family: 'Raleway';
+}
+h1, h2 {
+  font-family: 'Merienda One';
+}
+.raleway {
+  font-family: 'Raleway';
+}
+a:hover {
+  cursor: pointer;
+}
+.featured-hotel-wrapper {
+  background-color: #FFE6CC;
+}

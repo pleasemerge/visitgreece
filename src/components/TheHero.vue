@@ -27,7 +27,7 @@ const transitions = {
   }
 }
 
-const headerImgURL = new URL('../assets/img/beach-lg.png', import.meta.url).href
+const headerImgURL = new URL('../assets/img/beach-md.png', import.meta.url).href
 </script>
 
 <template>

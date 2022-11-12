@@ -50,7 +50,7 @@ import { featuredHotel } from '@/stores/hotels'
 import { hotels } from '@/stores/hotels'
 
 const destinationsBg = new URL('../assets/img/promo_destinations_bg.png', import.meta.url).href
-const promoBg = new URL(`../assets/img/promo_bg-lg.png`, import.meta.url).href
+const promoBg = new URL(`../assets/img/promo_bg-md.png`, import.meta.url).href
 
 const booking = useBookingStore()
 const destinations = _.uniq(hotels.map(hotel => hotel.province))

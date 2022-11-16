@@ -85,3 +85,4 @@ export const hotels = seedHotels()
 
 export const featuredHotels = hotels.filter(hotel => hotel.featured).slice(0, 3)
 export const featuredHotel = hotels.find(h => h.featured)
+export const randomHotel = hotels[_.random(0, hotels.length - 1)]

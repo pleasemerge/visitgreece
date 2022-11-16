@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import _ from 'underscore'
 import { useRoute } from 'vue-router'
-import { computed, ref, Ref } from 'vue'
+import { computed, ref, Ref, watch } from 'vue'
 import TheFeaturedHotel from '@/components/HotelFeatured.vue'
 import ListHotels from '@/components/HotelList.vue'
 import FormSelect from '@/components/FormSelect.vue'
@@ -18,6 +18,7 @@ const provinces = _.uniq(hotels.map(hotel => hotel.province))
 
 const route = useRoute()
 const sortBy = ref('asc')
+const searchQuery: Ref<string> = route.query.search ? ref(String(route.query.search)) : ref('')
 const pageSize = 9
 let limit = ref(pageSize)
 let filterByRating: Ref<number> = ref(0)
@@ -43,7 +44,8 @@ const filters = {
   byProvince: (hotel: IHotel) => {
     if (!selectedProvince.value || selectedProvince.value === 'All') return hotel
     return hotel.province === selectedProvince.value
-  }
+  },
+  searchQuery: (hotel: IHotel) => hotel.name.includes(searchQuery.value)
 }
 
 const totalItems = ref(0)
@@ -53,6 +55,7 @@ const items = computed(() : IHotel[] => {
   .filter(filters.byRating)
   .filter(filters.byFacilities)
   .filter(filters.byProvince)
+  .filter(filters.searchQuery)
 
   totalItems.value = items.length
 
@@ -64,6 +67,12 @@ const isFacilitySelected = (id: string | number) : boolean => selectedFacilities
 const loadMore = () => {
   limit.value += pageSize
 }
+
+watch(() => route.query.search, (newValue, _u) => {
+  if (newValue || newValue === '') {
+    searchQuery.value = newValue.toString()
+  }
+})
 </script>
 
 <template>
@@ -114,7 +123,7 @@ const loadMore = () => {
       <app-btn @click="loadMore()">Load more</app-btn>
     </div>
     <div v-if="items && items.length === 0" class="container">
-      No hotels found. <a @click="selectedProvince = ''; selectedFacilities = []; filterByRating = 0" class="underline text-gray-800">Reset filters</a>?
+      No hotels found. <a @click="selectedProvince = ''; selectedFacilities = []; filterByRating = 0; searchQuery = ''" class="underline text-gray-800">Reset filters</a>?
     </div>
   </div>
 </main>

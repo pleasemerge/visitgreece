@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { IUser, IComment } from '@/types'
+import { IUser, IComment, IImage } from '@/types'
 import _ from 'underscore'
 
 const generateUser = () : IUser => {
@@ -20,4 +20,14 @@ export const generateComments = (amount: number) : IComment[] => {
     })
   }
   return comments
+}
+
+export const generateImages = (amount: number) : IImage[] => {
+  let images = []
+  for (let i = 0; i < amount; i++) {
+    images.push({
+      src: `${faker.image.cats()}?random=${Date.now() + i}`
+    })
+  }
+  return images
 }

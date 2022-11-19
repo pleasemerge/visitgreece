@@ -6,6 +6,9 @@ import router from './router'
 
 import './assets/main.css'
 import './assets/tailwind.css'
+import 'lightgallery/css/lightgallery.css'
+import 'lightgallery/css/lg-thumbnail.css'
+import 'lightgallery/css/lg-zoom.css'
 
 const app = createApp(App)
 

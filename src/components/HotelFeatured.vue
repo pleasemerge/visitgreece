@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { useBookingStore } from '@/stores/booking'
 import HotelRating from '@/components/HotelRating.vue'
-
 import HotelName from '@/components/HotelName.vue'
 import HotelProvince from '@/components/HotelProvince.vue'
 import HotelFacility from '@/components/FacilityItem.vue'
 import HotelPrice from '@/components/HotelPrice.vue'
 import BookNowBtn from '@/components/BookNowBtn.vue'
 import { IHotel } from '@/types'
+import Lightgallery from 'lightgallery/vue'
+import lgThumbnail from 'lightgallery/plugins/thumbnail'
+import lgZoom from 'lightgallery/plugins/zoom'
 
+const plugins = [lgZoom, lgThumbnail]
 interface Props {
   hotel: IHotel
 }
@@ -21,14 +24,32 @@ const booking = useBookingStore()
 <template>
   <div class="flex flex-wrap w-full relative py-4" v-if="hotel">
     <div class="w-full md:w-1/2">
-      <div class="relative">
-        <img :src="hotel.imgSrc" class="object-cover w-full">
-        <div class="absolute left-0 top-0 px-2 py-1 text-sm bg-secondary text-white">featured</div>
-        <div class="absolute bottom-0 right-0 text-white p-4 bg-gray-800 bg-opacity-80">
-          <hotel-price :price="hotel.price" />
+      <div>
+        <div class="relative">
+          <img :src="hotel.imgSrc" class="object-cover w-full">
+            <div class="absolute left-0 top-0 px-2 py-1 text-sm bg-secondary text-white">featured</div>
+            <div class="absolute bottom-0 right-0 text-white p-4 bg-gray-800 bg-opacity-80">
+              <hotel-price :price="hotel.price" />
+            </div>
+            <div class="absolute right-2 top-1">
+              <hotel-rating :rating="hotel.rating" />
+            </div>
         </div>
-        <div class="absolute right-2 top-1">
-          <hotel-rating :rating="hotel.rating" />
+        <div v-if="hotel.images && hotel.images.length > 0" class="flex">
+          <lightgallery
+            :settings="{ speed: 500, plugins: plugins }"
+            class="flex gap-2 my-2 rounded-md overflow-x-hidden"
+          >
+            <a 
+              v-for="(img, index) of hotel.images" 
+              :key="index" 
+              :src="img.src"
+              :data-lg-size="'600-400'"
+              :thumbnail="true"
+            >
+              <img :src="img.src" :thumb="img.src" width="80" class="rounded-md" />
+            </a>   
+          </lightgallery>
         </div>
       </div>
     </div>

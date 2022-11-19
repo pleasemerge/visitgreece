@@ -9,6 +9,11 @@ const route = useRoute()
 const hotelsStore = useHotelsStore()
 const hotel = hotelsStore.hotels.find(h => h.name === route.params.name)
 
+
+const medianRating = hotel && hotel.comments ? hotel?.comments?.reduce((total, comment, _u) => {
+  return total += comment.rating
+}, 0) / hotel.comments.length : 0
+
 </script>
 
 <template>
@@ -18,7 +23,17 @@ const hotel = hotelsStore.hotels.find(h => h.name === route.params.name)
       <featured-hotel :hotel="hotel" class="container" />
     </div>
     <div v-if="hotel.comments && hotel.comments.length > 0" class="container my-4">
-      <h1 class="text-3xl py-4">Reviews</h1>
+      <div class="w-full flex justify-between">
+        <h1 class="text-3xl py-4">Reviews</h1>
+        <div class="grid py-4">
+          <div class="text-gray-500">
+            Median users rating
+          </div>
+          <div class="flex justify-end">
+            <star-icon class="inline-block w-4 h-4 text-amber-400" v-for="star in [...Array(Math.round(medianRating)).keys()]" :key="star" />
+          </div>
+        </div>
+      </div>
       <div v-for="(comment, index) of hotel.comments" :key="index" class="p-4 bg-white mb-2 border border-gray-200 rounded-md w-full flex flex-wrap">
         <div class="w-full flex items-center flex-wrap justify-between">
           <div>

@@ -14,7 +14,8 @@ export type IHotel = {
   price: number,
   featured?: boolean,
   about?: string,
-  comments?: IComment[]
+  comments?: IComment[],
+  images?: IImage[]
 }
 
 export type EmptyHotel<T> = {
@@ -24,16 +25,17 @@ export type EmptyHotel<T> = {
 export type HotelFacilities = HotelFacilityDescription[]
 
 export class Hotel implements IHotel {
-  public id?: number;
-  public name: string;
-  public rating: number;
-  public imgSrc: string;
-  public province: string;
-  public facilities: HotelFacilityDescription[];
-  public price: number;
-  public featured?: boolean;
-  public about?: string;
-  public comments?: IComment[];
+  public id?: number
+  public name: string
+  public rating: number
+  public imgSrc: string
+  public province: string
+  public facilities: HotelFacilityDescription[]
+  public price: number
+  public featured?: boolean
+  public about?: string
+  public comments?: IComment[]
+  public images?: IImage[]
 
   constructor ( props: IHotel ) {
     this.id = props.id
@@ -46,6 +48,7 @@ export class Hotel implements IHotel {
     this.featured = props.featured
     this.about = props.about
     this.comments = props.comments
+    this.images = props.images
   }
 }
 
@@ -111,4 +114,8 @@ export interface IComment {
   text: string,
   rating: number,
   date: Date
+}
+
+export interface IImage {
+  src: string
 }

@@ -1,7 +1,7 @@
 import { Hotel, IHotel,  HotelFacilityDescription } from '@/types'
 import { facilities } from '@/stores/facilities'
 import { defineStore } from 'pinia'
-import { generateComments } from '@/helpers/seed'
+import { generateComments, generateImages } from '@/helpers/seed'
 import { faker } from '@faker-js/faker'
 import _ from 'underscore'
 
@@ -74,7 +74,8 @@ const seedHotels = () => {
       facilities: hotelFacilities,
       price: _.random(30, 150),
       about: faker.lorem.paragraph(),
-      comments: generateComments(_.random(5, 25))
+      comments: generateComments(_.random(5, 25)),
+      images: generateImages(_.random(3, 10))
     }))
     id++
   }
@@ -85,3 +86,4 @@ export const hotels = seedHotels()
 
 export const featuredHotels = hotels.filter(hotel => hotel.featured).slice(0, 3)
 export const featuredHotel = hotels.find(h => h.featured)
+export const randomHotel = hotels[_.random(0, hotels.length - 1)]

@@ -9,9 +9,12 @@ import AppBtn from '@/components/AppBtn.vue'
 import { IHotel } from '@/types'
 import { facilities } from '@/stores/facilities'
 import { useHotelsStore } from '@/stores/hotels'
+import { useBookmarks } from '@/stores/bookmarks'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/vue/24/solid'
+import { BookmarkIcon } from '@heroicons/vue/24/outline'
 
 const hotelsStore = useHotelsStore()
+const bookmarks = useBookmarks()
 const hotels = hotelsStore.hotels
 const featuredHotel = hotelsStore.featured[0]
 const provinces = _.uniq(hotels.map(hotel => hotel.province))
@@ -19,6 +22,7 @@ const provinces = _.uniq(hotels.map(hotel => hotel.province))
 const route = useRoute()
 const sortBy = ref('asc')
 const searchQuery: Ref<string> = route.query.search ? ref(String(route.query.search)) : ref('')
+const showBookmarks = ref(false)
 const pageSize = 9
 let limit = ref(pageSize)
 let filterByRating: Ref<number> = ref(0)
@@ -45,17 +49,19 @@ const filters = {
     if (!selectedProvince.value || selectedProvince.value === 'All') return hotel
     return hotel.province === selectedProvince.value
   },
-  searchQuery: (hotel: IHotel) => hotel.name.includes(searchQuery.value)
+  searchQuery: (hotel: IHotel) => hotel.name.includes(searchQuery.value),
+  inBookmarks: (hotel: IHotel) => showBookmarks.value ? bookmarks.items.find(b => b.id === hotel.id) : hotel
 }
 
 const totalItems = ref(0)
 
 const items = computed(() : IHotel[] => {
   const items = _.sortBy(hotels, h => sortBy.value === 'asc' ? h.price : -h.price)
-  .filter(filters.byRating)
-  .filter(filters.byFacilities)
-  .filter(filters.byProvince)
-  .filter(filters.searchQuery)
+    .filter(filters.inBookmarks)
+    .filter(filters.byRating)
+    .filter(filters.byFacilities)
+    .filter(filters.byProvince)
+    .filter(filters.searchQuery)
 
   totalItems.value = items.length
 
@@ -73,6 +79,25 @@ watch(() => route.query.search, (newValue, _u) => {
     searchQuery.value = newValue.toString()
   }
 })
+
+watch (showBookmarks, (show, _u) => {
+  if (show) {
+    searchQuery.value = ''
+  }
+})
+
+watch(computed(() => bookmarks.items.length), (bookmarksCount, _u) => {
+ if (bookmarksCount === 0) {
+  showBookmarks.value = false
+ }
+})
+
+const resetFilters = () => {
+  selectedProvince.value = ''
+  selectedFacilities.value = []
+  filterByRating.value = 0
+  searchQuery.value = ''
+}
 </script>
 
 <template>
@@ -84,15 +109,26 @@ watch(() => route.query.search, (newValue, _u) => {
     <div class="container py-2">
       <div class="flex flex-wrap items-center gap-2">
         <div>
-          <a class="w-full my-2 inline-block text-sm px-4 py-2 text-gray-800 rounded-md bg-orange-100 hover:bg-orange-200" @click="sortBy = sortBy === 'desc' ? 'asc' : 'desc'">
+          <app-btn class-names="w-full my-2 inline-block px-4 py-2 text-gray-800 rounded-md bg-orange-100 hover:bg-orange-200" @click="sortBy = sortBy === 'desc' ? 'asc' : 'desc'">
             <span v-if="sortBy === 'asc'" key="sorting-by">
               Price <arrow-up-icon class="w-4 h-4 inline-block" />
             </span>
             <span v-else>
               Price <arrow-down-icon class="w-4 h-4 inline-block" />
             </span>
-          </a>
+          </app-btn>
         </div>
+
+        <app-btn 
+          :class-names="[
+            'p-2 text-gray-800 transition-colors duration-200 rounded-md', 
+            showBookmarks ? 'bg-orange-200 hover:bg-orange-100' : 'bg-orange-100 hover:bg-orange-200'
+          ]" 
+          @click="showBookmarks = !showBookmarks" 
+          v-if="bookmarks.items.length > 0"
+        >
+          Bookmarks <bookmark-icon class="w-4 h-4 inline-block text-gray-500" />
+        </app-btn>
 
         <form-select 
           :options="[5, 4, 3].map(f => ({value: f, selected: f === filterByRating, text: `${f} stars`}))" 
@@ -123,7 +159,7 @@ watch(() => route.query.search, (newValue, _u) => {
       <app-btn @click="loadMore()">Load more</app-btn>
     </div>
     <div v-if="items && items.length === 0" class="container">
-      No hotels found. <a @click="selectedProvince = ''; selectedFacilities = []; filterByRating = 0; searchQuery = ''" class="underline text-gray-800">Reset filters</a>?
+      No hotels found. <a @click="resetFilters()" class="underline text-gray-800">Reset filters</a>?
     </div>
   </div>
 </main>

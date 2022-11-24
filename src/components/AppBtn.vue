@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  classNames?: string
+  classNames?: string | string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {

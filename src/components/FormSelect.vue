@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
 <Listbox v-slot="{ open }">
   <div class="relative">
-    <ListboxButton class="py-1 px-4 rounded-md border border-gray-100 bg-orange-100 hover:bg-orange-200 transition-colors duration-100">
+    <ListboxButton class="py-2 px-4 rounded-md border border-gray-100 bg-orange-100 hover:bg-orange-200 transition-colors duration-100">
       {{defaultOption.text}} <ChevronDownIcon class="w-3 h-3 inline-block" />
     </ListboxButton>
 

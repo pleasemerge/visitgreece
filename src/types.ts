@@ -5,7 +5,7 @@ export type HotelFacilityDescription = {
 }
 
 export type IHotel = {
-  id?: number,
+  id: number,
   name: string,
   rating: number,
   imgSrc: string,
@@ -25,7 +25,7 @@ export type EmptyHotel<T> = {
 export type HotelFacilities = HotelFacilityDescription[]
 
 export class Hotel implements IHotel {
-  public id?: number
+  public id: number
   public name: string
   public rating: number
   public imgSrc: string
@@ -118,4 +118,8 @@ export interface IComment {
 
 export interface IImage {
   src: string
+}
+
+export interface IBookmark {
+  id: number | string
 }

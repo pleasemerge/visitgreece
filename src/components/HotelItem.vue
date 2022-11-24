@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useBookingStore } from '@/stores/booking'
+import { useBookmarks } from '@/stores/bookmarks'
 import HotelImage from '@/components/HotelImage.vue'
 import HotelName from '@/components/HotelName.vue'
 import HotelProvince from '@/components/HotelProvince.vue'
@@ -8,8 +9,11 @@ import HotelPrice from '@/components/HotelPrice.vue'
 import BookNowBtn from '@/components/BookNowBtn.vue'
 import { IHotel } from '@/types'
 import HotelRating from '@/components/HotelRating.vue'
+import { BookmarkIcon } from '@heroicons/vue/24/outline'
+import { BookmarkSlashIcon } from '@heroicons/vue/24/solid'
 
 const booking = useBookingStore()
+const bookmarks = useBookmarks()
 
 interface Props {
   hotel: IHotel,
@@ -30,8 +34,12 @@ const props = defineProps<Props>()
       </div>
     </div>
     <div class="p-4 w-full grid">
-      <div class="mt-4 w-full">
+      <div class="mt-4 w-full flex justify-between">
         <hotel-name :name="hotel.name" />
+        <a @click="bookmarks.add(hotel.id)">
+          <bookmark-slash-icon v-if="bookmarks.items.find(b => b.id === hotel.id)" class="text-yellow-500 w-6 h-6 inline-block" />
+          <bookmark-icon v-else class="w-6 h-6 inline-block text-gray-500" />
+        </a>
       </div>
       <div class="w-full">
         <hotel-province :province="hotel.province" />

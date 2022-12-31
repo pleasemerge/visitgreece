@@ -9,6 +9,7 @@ type RootState = {
   checkOutDate: Date,
   tourStartDate: number,
   step: number,
+  orderType: string,
   guests: number,
   rooms: number,
   name: string,
@@ -20,6 +21,7 @@ export const useBookingStore = defineStore('bookingStore', {
   state: () => ({
     hotel: {},
     tour: {},
+    orderType: '',
     checkInDate: new Date(),
     checkOutDate: new Date(),
     name: '',
@@ -48,8 +50,9 @@ export const useBookingStore = defineStore('bookingStore', {
     setTour (tour: Tour) {
       this.tour = tour
     },
-    setStep (step: number) {
+    setStep (step: number, orderType: string) {
       this.step = step
+      this.orderType = orderType
     },
     setCheckInDate (date: Date) {
       this.checkInDate = date
@@ -74,6 +77,7 @@ export const useBookingStore = defineStore('bookingStore', {
     },
     reset () {
       this.step = 1
+      this.orderType = ''
       this.checkInDate = new Date()
       this.checkOutDate = new Date()
       this.guests = 1
@@ -87,14 +91,21 @@ export const useBookingStore = defineStore('bookingStore', {
     rentingPeriod: (state: RootState) => {
       return Math.floor((Date.parse(state.checkOutDate.toDateString()) - Date.parse(state.checkInDate.toDateString())) / 86400000)
     },
-    totalPayment (state: RootState) : number {
-      if (this.hotel && this.hotel.id) {
+    totalHotelPayment (state: RootState) : number {
+      if (state.hotel) {
         const amount = ((this.rentingPeriod * state.hotel.price) * state.guests) * state.rooms
         return amount > 0 ? amount : 0
       } else {
+        return 0
+      }
+    },
+    totalTourPayment (state: RootState) : number {
+      if (this.tour) {
         return this.tour.itinerary.reduce((total, ininerary, _useless) => {
           return total += ininerary.days * ininerary.hotel.price
         }, 0)
+      } else {
+        return 0
       }
     }
   }

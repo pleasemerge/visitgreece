@@ -45,7 +45,7 @@ const onBookingDetailsFormSubmit = (_values: any, actions: any) => {
       'period-err': 'Select correct period'
     })
   }
-  booking.setStep(2)
+  booking.setStep(2, 'hotel')
 }
 
 </script>
@@ -72,7 +72,7 @@ const onBookingDetailsFormSubmit = (_values: any, actions: any) => {
   </div>
 
   <div class="my-4">
-    Total: <span class="font-bold">${{booking.totalPayment}}</span>
+    Total: <span class="font-bold">${{booking.totalHotelPayment}}</span>
   </div>
 
   <Form :validation-schema="bookingDetailsformValidationSchema" @submit="onBookingDetailsFormSubmit" class="py-4 flex flex-wrap gap-2">

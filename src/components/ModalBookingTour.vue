@@ -20,8 +20,9 @@ const closeForm = () => {
 }
 
 onMounted(() => {
+  booking.reset()
   booking.setTour(booking.tour)
-  booking.setStep(1)
+  booking.setStep(1, 'tour')
 })
 </script>
 
@@ -64,7 +65,7 @@ onMounted(() => {
     </div>
     
     <div class="flex w-full justify-between items-center mt-4 mb-2">
-      <app-btn @click="booking.setStep(2)">Make payment (${{tour.getCost()}})</app-btn>
+      <app-btn @click="booking.setStep(2, 'tour')">Make payment (${{tour.getCost()}})</app-btn>
       <a class="underline pl-2" @click="closeForm()">Close</a>
     </div>
   </div>

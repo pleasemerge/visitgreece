@@ -38,7 +38,7 @@ const visaIconSrc = new URL('../assets/img/icons/visa.png', import.meta.url).hre
     </div>
   </div>
   <div>
-    Total: ${{booking.totalPayment}}
+    Total: ${{booking.orderType === 'tour' ? booking.totalTourPayment : booking.totalHotelPayment}}
   </div>
 
   <Form class="py-4 flex flex-wrap gap-2" :validation-schema="paymentFormValidationSchema">
@@ -69,7 +69,7 @@ const visaIconSrc = new URL('../assets/img/icons/visa.png', import.meta.url).hre
   <div class="flex justify-between flex-wrap items-center">
     <div class="flex items-center gap-2">
       <app-btn @click="toastsStore.showToast('Not implemented')">Pay now</app-btn>
-      <app-btn class-names="bg-gray-400 rounded-md text-white px-4 py-2" @click="booking.setStep(1)">Back</app-btn>
+      <app-btn class-names="bg-gray-400 rounded-md text-white px-4 py-2" @click="booking.setStep(1, 'default')">Back</app-btn>
     </div>
     
     <div>
